@@ -1,0 +1,20 @@
+# @three-ws/onchain-agent-wallets
+
+> Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy. Custody never leaves your wallet: you can revoke or withdraw at any moment, and the agent can never spend past the delegated ceiling.
+
+@three-ws/onchain-agent-wallets is a Model Context Protocol server from three.ws. Install: `npx -y @three-ws/onchain-agent-wallets`.
+
+## Docs
+
+- [README](https://github.com/nirholas/onchain-agent-wallets/blob/main/README.md): install, configuration, full reference
+- [Documentation site](https://nirholas.github.io/onchain-agent-wallets/): the README as a web page
+- [Full text for LLMs](https://nirholas.github.io/onchain-agent-wallets/llms-full.txt): README inlined
+- [AGENTS.md](https://github.com/nirholas/onchain-agent-wallets/blob/main/AGENTS.md): guidance for coding agents
+
+## Project
+
+- [Source](https://github.com/nirholas/onchain-agent-wallets)
+- [npm](https://www.npmjs.com/package/@three-ws/onchain-agent-wallets)
+- [three.ws](https://three.ws): the platform this is part of
+- [Issues](https://github.com/nirholas/onchain-agent-wallets/issues)
+- [MCP Registry](https://registry.modelcontextprotocol.io/?q=io.github.nirholas%2Fonchain-agent-wallets)

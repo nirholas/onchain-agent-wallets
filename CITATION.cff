@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "@three-ws/onchain-agent-wallets"
+abstract: "Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy. Custody never leaves your wallet: you can revoke or withdraw at any moment, and the agent can never spend past the delegated ceiling."
+version: 0.1.1
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/onchain-agent-wallets"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"

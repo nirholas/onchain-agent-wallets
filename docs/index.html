@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@three-ws/onchain-agent-wallets: Give an AI agent a real Solana wallet without giving it your money</title>
+<meta name="description" content="Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy.">
+<link rel="canonical" href="https://nirholas.github.io/onchain-agent-wallets/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="three.ws">
+<meta property="og:title" content="@three-ws/onchain-agent-wallets">
+<meta property="og:description" content="Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy.">
+<meta property="og:url" content="https://nirholas.github.io/onchain-agent-wallets/">
+<meta property="og:image" content="https://nirholas.github.io/onchain-agent-wallets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="@three-ws/onchain-agent-wallets">
+<meta name="twitter:description" content="Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy.">
+<meta name="twitter:image" content="https://nirholas.github.io/onchain-agent-wallets/og.png">
+<meta name="keywords" content="mcp, model-context-protocol, solana, agent-wallet, onchain-agent, x402, usdc, spl-token, delegation, spending-limit, self-custody, guardrails, ai-agent, agent-payments, three.ws, mcp-server, ai-agents">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt">
+<link rel="icon" href="https://three.ws/three-ws-mcp-icon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"@three-ws/onchain-agent-wallets","description":"Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy.","codeRepository":"https://github.com/nirholas/onchain-agent-wallets","programmingLanguage":"JavaScript","license":"https://spdx.org/licenses/Apache-2.0.html","version":"0.1.1","url":"https://nirholas.github.io/onchain-agent-wallets/","author":{"@type":"Organization","name":"three.ws","url":"https://three.ws"},"keywords":"mcp, model-context-protocol, solana, agent-wallet, onchain-agent, x402, usdc, spl-token, delegation, spending-limit, self-custody, guardrails, ai-agent, agent-payments, three.ws, mcp-server, ai-agents"}</script>
+<style>:root{--bg:#fff;--fg:#111418;--mut:#586069;--line:#e3e6ea;--acc:#2563eb;--code:#f4f6f8;--card:#fafbfc}
+@media(prefers-color-scheme:dark){:root{--bg:#0b0d10;--fg:#e8eaed;--mut:#9aa3ad;--line:#232830;--acc:#6ea0ff;--code:#14181d;--card:#10141a}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
+header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;color:var(--fg)}
+.bar nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
+.bar nav a{color:var(--mut);text-decoration:none;transition:color .15s}.bar nav a:hover{color:var(--fg)}
+.hero{max-width:1100px;margin:0 auto;padding:48px 16px 24px}
+.hero h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+.hero p{color:var(--mut);max-width:70ch;font-size:18px;margin:0 0 24px}
+.install{display:flex;align-items:center;gap:8px;max-width:620px;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:6px 6px 6px 14px}
+.install code{flex:1;overflow-x:auto;white-space:nowrap;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+.install button{border:0;background:var(--acc);color:#fff;border-radius:7px;padding:8px 14px;font:600 13px system-ui;cursor:pointer;transition:transform .12s,opacity .12s}
+.install button:hover{opacity:.9}.install button:active{transform:scale(.96)}
+.cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cta a{padding:9px 16px;border:1px solid var(--line);border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;color:var(--fg);transition:border-color .15s,transform .15s}
+.cta a:hover{border-color:var(--acc);transform:translateY(-1px)}.cta a.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.layout{max-width:1100px;margin:0 auto;padding:8px 16px 64px;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:40px}
+@media(max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.toc{position:sticky;top:76px;align-self:start;font-size:14px;border-left:1px solid var(--line);padding-left:16px}
+.toc p{margin:0 0 8px;font-weight:700;color:var(--mut);text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+.toc ul{list-style:none;margin:0;padding:0}.toc li{margin:6px 0}.toc a{color:var(--mut);text-decoration:none}.toc a:hover{color:var(--fg)}
+main{min-width:0;overflow-wrap:anywhere}main pre code{overflow-wrap:normal}main img{max-width:100%;height:auto}
+main h2{margin-top:2.2em;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+.anchor{margin-left:-1.1em;padding-right:.4em;text-decoration:none;opacity:0;color:var(--mut)}h2:hover .anchor,h3:hover .anchor,h4:hover .anchor{opacity:1}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.5}
+code{font:0.9em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);padding:.15em .35em;border-radius:5px}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%}th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}th{background:var(--card)}
+blockquote{margin:1em 0;padding:.2em 1em;border-left:4px solid var(--line);color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+.foot-in{max-width:1100px;margin:0 auto;padding:24px 16px;display:flex;gap:16px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+<a class="brand" href="https://nirholas.github.io/onchain-agent-wallets/">@three-ws/onchain-agent-wallets</a>
+<nav aria-label="Project links"><a href="https://github.com/nirholas/onchain-agent-wallets">GitHub</a><a href="https://www.npmjs.com/package/@three-ws/onchain-agent-wallets">npm</a><a href="llms.txt">llms.txt</a><a href="https://three.ws">three.ws</a></nav>
+</div></header>
+<section class="hero">
+<h1>@three-ws/onchain-agent-wallets</h1>
+<p>Give an AI agent a real Solana wallet without giving it your money. The agent gets a spending allowance the SPL Token program enforces on-chain, plus guardrails (per-tx cap, daily cap, recipient and host allowlists, expiry, kill switch), x402 payments, and a one-call on-chain deploy.</p>
+<div class="install" role="group" aria-label="Install command"><code>npx -y @three-ws/onchain-agent-wallets</code><button type="button" data-copy="npx -y @three-ws/onchain-agent-wallets">Copy</button></div>
+<div class="cta"><a class="pri" href="https://github.com/nirholas/onchain-agent-wallets">View on GitHub</a><a href="https://github.com/nirholas/onchain-agent-wallets/stargazers">Star the repo</a><a href="https://registry.modelcontextprotocol.io/?q=io.github.nirholas%2Fonchain-agent-wallets">MCP Registry</a></div>
+</section>
+<div class="layout">
+<main id="content"><h1>onchain-agent-wallets</h1>
+<p><strong>Give an AI agent a real Solana wallet without giving it your money.</strong></p>
+<p>An MCP server that hands any agent a spending allowance instead of a private key. The funds stay in an account you own. The agent gets a delegation the SPL Token program caps on-chain, plus guardrails you control, plus the ability to pay x402 APIs out of that allowance. You can revoke it in one instruction, and take the money back without asking the agent.</p>
+<p>Nothing here is mocked: real SPL Token delegations, real Solana, real x402 settlement.</p>
+<p><strong><a href="https://nirholas.github.io/onchain-agent-wallets/">Read the overview</a></strong> · <a href="https://www.npmjs.com/package/@three-ws/onchain-agent-wallets">npm</a></p>
+<h2 id="the-problem-this-solves"><a class="anchor" href="#the-problem-this-solves" aria-label="Link to this section">#</a>The problem this solves</h2>
+<p>Every &quot;agent wallet&quot; today works the same way: you generate a keypair, you hand it to the agent, and now the agent has everything in it. There is no ceiling, no allowlist, no expiry, and no way to take it back short of racing the agent to move the funds. People solve this by keeping almost nothing in the wallet, which means the agent cannot do anything useful.</p>
+<p>An allowance is the older, better answer. The money never moves to the agent. The agent gets permission to spend a slice of it, and the chain enforces the slice.</p>
+<h2 id="how-it-works"><a class="anchor" href="#how-it-works" aria-label="Link to this section">#</a>How it works</h2>
+<pre><code>   YOU (Phantom, Solflare, Ledger)
+    │  owns the vault, holds the money, can revoke or withdraw at any time
+    ▼
+  ┌──────────────────────────────────────────┐
+  │  vault token account                     │   derived from your address:
+  │  owner    = you                          │   createWithSeed(you, &quot;oaw1:&lt;agent&gt;&quot;)
+  │  balance  = 500 USDC                     │
+  │  delegate = the agent  ← capped at 100   │   SPL Token enforces this number
+  └──────────────────────────────────────────┘
+    ▲
+    │  may spend up to the cap, and not one unit more
+   AGENT (its own keypair, holds only fee SOL)
+</code></pre>
+<p>Two independent layers protect you:</p>
+<ol>
+<li><strong>On-chain.</strong> The SPL Token program checks every agent-signed transfer against <code>delegated_amount</code> and decrements it on each spend. Our code cannot raise it. A single <code>revoke</code> sets it to zero. This is a stock token program feature, not a new contract to trust.</li>
+<li><strong>Local.</strong> Before this server signs anything it applies your rules: per-transaction cap, rolling 24-hour cap, recipient allowlist, x402 host allowlist, expiry, pause, and a confirm-above-this threshold that forces a human yes.</li>
+</ol>
+<p>The agent&#39;s own keypair holds nothing but a little SOL for fees. If it leaks, the blast radius is the remaining allowance, and <code>revoke_agent_wallet</code> closes it in one transaction.</p>
+<h2 id="install"><a class="anchor" href="#install" aria-label="Link to this section">#</a>Install</h2>
+<pre><code class="language-bash">npm install -g @three-ws/onchain-agent-wallets
+# or run it ad hoc
+npx -y @three-ws/onchain-agent-wallets
+</code></pre>
+<h2 id="setup"><a class="anchor" href="#setup" aria-label="Link to this section">#</a>Setup</h2>
+<p>Claude Code:</p>
+<pre><code class="language-bash">claude mcp add onchain-agent-wallets -- npx -y @three-ws/onchain-agent-wallets
+</code></pre>
+<p>Cursor, or any MCP client (<code>mcp.json</code>):</p>
+<pre><code class="language-json">{
+	&quot;mcpServers&quot;: {
+		&quot;onchain-agent-wallets&quot;: {
+			&quot;command&quot;: &quot;npx&quot;,
+			&quot;args&quot;: [&quot;-y&quot;, &quot;@three-ws/onchain-agent-wallets&quot;],
+			&quot;env&quot;: {
+				&quot;OAW_NETWORK&quot;: &quot;mainnet&quot;
+			}
+		}
+	}
+}
+</code></pre>
+<p>No key is required to start. Owner actions come back as an unsigned transaction for your wallet to sign, which <code>send_signed_transaction</code> then broadcasts. If you would rather this server sign for you, set <code>OWNER_SECRET_KEY</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OWNER_SECRET_KEY</code></td>
+<td>unset</td>
+<td>Owner key, base58 or a JSON byte array. Optional: without it, you sign in Phantom.</td>
+</tr>
+<tr>
+<td><code>OAW_NETWORK</code></td>
+<td><code>mainnet</code></td>
+<td><code>mainnet</code> or <code>devnet</code>. State is kept per network.</td>
+</tr>
+<tr>
+<td><code>SOLANA_RPC_URL</code></td>
+<td>public endpoint</td>
+<td>Your own RPC. The public one rate-limits hard. Must be https.</td>
+</tr>
+<tr>
+<td><code>OAW_STATE_DIR</code></td>
+<td><code>~/.onchain-agent-wallets</code></td>
+<td>Where agent keypairs, guardrails, and the spend ledger live (0600 in a 0700 dir).</td>
+</tr>
+<tr>
+<td><code>REQUIRE_CONFIRM</code></td>
+<td><code>true</code></td>
+<td>Every value-moving tool refuses to broadcast without <code>confirm:true</code>.</td>
+</tr>
+</tbody></table>
+<h2 id="quickstart"><a class="anchor" href="#quickstart" aria-label="Link to this section">#</a>Quickstart</h2>
+<p>Give a research agent 100 USDC of spending power, capped at 5 per transaction and 20 per day, and only for one API:</p>
+<pre><code>create_agent_wallet
+  id: &quot;researcher&quot;
+  allowance: &quot;100&quot;
+  per_tx: &quot;5&quot;
+  daily: &quot;20&quot;
+  allow_hosts: [&quot;api.example.com&quot;]
+  confirm: true
+
+fund_agent_wallet  id: &quot;researcher&quot;  amount: &quot;500&quot;  sol: &quot;0.02&quot;  confirm: true
+</code></pre>
+<p>The agent now spends on its own:</p>
+<pre><code>pay_x402  id: &quot;researcher&quot;  url: &quot;https://api.example.com/premium&quot;  confirm: true
+agent_pay id: &quot;researcher&quot;  to: &quot;&lt;address&gt;&quot;  amount: &quot;2.50&quot;  confirm: true
+</code></pre>
+<p>And you stay in control:</p>
+<pre><code>agent_wallet_status  id: &quot;researcher&quot;      # live balances, remaining allowance, warnings
+spend_log            id: &quot;researcher&quot;      # every spend AND every refusal, with reasons
+set_guardrails       id: &quot;researcher&quot;  paused: true      # instant, free, no transaction
+revoke_agent_wallet  id: &quot;researcher&quot;  withdraw: true  confirm: true   # on-chain kill switch
+</code></pre>
+<p>A refusal tells you exactly which rule fired:</p>
+<pre><code class="language-json">{
+	&quot;ok&quot;: false,
+	&quot;error&quot;: &quot;over_daily&quot;,
+	&quot;message&quot;: &quot;20.5 would exceed the 20 daily cap (18 already spent)&quot;,
+	&quot;checks&quot;: [
+		{ &quot;check&quot;: &quot;per_tx&quot;, &quot;ok&quot;: true, &quot;detail&quot;: &quot;2.5 is within the 5 per-transaction cap&quot; },
+		{ &quot;check&quot;: &quot;daily&quot;, &quot;ok&quot;: false, &quot;detail&quot;: &quot;20.5 would exceed the 20 daily cap (18 already spent)&quot; }
+	]
+}
+</code></pre>
+<h2 id="tools"><a class="anchor" href="#tools" aria-label="Link to this section">#</a>Tools</h2>
+<p><strong>Custody (you sign)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>create_agent_wallet</code></td>
+<td>Generate the agent&#39;s keypair, create the vault, delegate a capped allowance, set guardrails. One call.</td>
+</tr>
+<tr>
+<td><code>fund_agent_wallet</code></td>
+<td>Move tokens into the vault, and SOL to the agent for its fees.</td>
+</tr>
+<tr>
+<td><code>approve_agent_allowance</code></td>
+<td>Raise, lower, or refill the on-chain ceiling. Replaces the previous allowance.</td>
+</tr>
+<tr>
+<td><code>withdraw_from_vault</code></td>
+<td>Take funds back. Works with or without a live delegation.</td>
+</tr>
+<tr>
+<td><code>revoke_agent_wallet</code></td>
+<td>The kill switch. Optionally sweeps the balance home in the same transaction.</td>
+</tr>
+<tr>
+<td><code>send_signed_transaction</code></td>
+<td>Broadcast a transaction your wallet signed.</td>
+</tr>
+</tbody></table>
+<p><strong>Guardrails</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set_guardrails</code></td>
+<td>per_tx, daily, allow_recipients, allow_hosts, expires_at, confirm_over, paused. Instant, free, no transaction.</td>
+</tr>
+</tbody></table>
+<p><strong>Spending (the agent signs)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agent_pay</code></td>
+<td>Send tokens to a recipient, inside the limits.</td>
+</tr>
+<tr>
+<td><code>pay_x402</code></td>
+<td>Call an x402 API, paying from the allowance.</td>
+</tr>
+</tbody></table>
+<p><strong>Visibility</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agent_wallet_status</code></td>
+<td>Live on-chain state, guardrails, 24h and 7d totals, and warnings.</td>
+</tr>
+<tr>
+<td><code>list_agent_wallets</code></td>
+<td>Every agent, with live balances.</td>
+</tr>
+<tr>
+<td><code>spend_log</code></td>
+<td>The audit trail, refusals included.</td>
+</tr>
+</tbody></table>
+<p><strong>Deployment</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>deploy_agent_onchain</code></td>
+<td>Mint the agent a Metaplex Agent Registry identity with its payment address in the on-chain attributes.</td>
+</tr>
+<tr>
+<td><code>export_agent_runtime</code></td>
+<td>The mcp.json and identity card needed to run this agent somewhere else.</td>
+</tr>
+</tbody></table>
+<h2 id="guardrails"><a class="anchor" href="#guardrails" aria-label="Link to this section">#</a>Guardrails</h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Effect</th>
+<th>Enforced by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>allowance</td>
+<td>Total the agent may ever spend before a new approval</td>
+<td>SPL Token program, on-chain</td>
+</tr>
+<tr>
+<td>vault balance</td>
+<td>The agent cannot spend what is not there</td>
+<td>SPL Token program, on-chain</td>
+</tr>
+<tr>
+<td><code>per_tx</code></td>
+<td>Maximum single spend</td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>daily</code></td>
+<td>Maximum per rolling 24 hours, computed from the local ledger</td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>allow_recipients</code></td>
+<td>Only these addresses may receive funds. Empty means unrestricted</td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>allow_hosts</code></td>
+<td>Only these hosts may be paid over x402. Subdomains inherit. Empty means unrestricted</td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>Every spend refused after this timestamp</td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>confirm_over</code></td>
+<td>Spends above this need an explicit <code>confirm:true</code></td>
+<td>this server</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>Everything refused, instantly and for free</td>
+<td>this server</td>
+</tr>
+</tbody></table>
+<p>The distinction matters when it goes wrong. If this machine is compromised, the local rules can be bypassed, and the on-chain allowance still cannot. That is why the allowance should be the smallest number that lets the agent work, topped up as needed, rather than the whole balance.</p>
+<h2 id="x402"><a class="anchor" href="#x402" aria-label="Link to this section">#</a>x402</h2>
+<p><code>pay_x402</code> probes the endpoint unpaid first, so the price is known before anything moves and the guardrails see the real number. Then it tops the agent up for exactly that amount out of the vault, pays, and leaves the agent empty again.</p>
+<p>It refuses to pay:</p>
+<ul>
+<li>on a chain other than Solana (<code>no_solana_option</code>)</li>
+<li>on the wrong cluster, for instance a mainnet price from a devnet wallet (<code>wrong_cluster</code>)</li>
+<li>in a token the allowance is not denominated in (<code>asset_mismatch</code>)</li>
+<li>above <code>max_price</code>, a per-call ceiling independent of the standing guardrails (<code>over_max_price</code>)</li>
+</ul>
+<p>If the endpoint is not charging, the content comes back and nothing is spent.</p>
+<h2 id="what-the-agent-cannot-do"><a class="anchor" href="#what-the-agent-cannot-do" aria-label="Link to this section">#</a>What the agent cannot do</h2>
+<ul>
+<li>Spend more than the allowance, however it is prompted. The token program decides that, not the model.</li>
+<li>Move the vault, close it, or change its owner. It is not the owner.</li>
+<li>Stop you withdrawing, or stop a revoke.</li>
+<li>Raise its own allowance. Only an owner-signed <code>approve</code> does that.</li>
+<li>Touch anything else in your wallet. The vault is a separate account holding only what you put in it.</li>
+</ul>
+<p>Proven in <a href="https://github.com/nirholas/onchain-agent-wallets/blob/main/test/token-delegation.test.mjs"><code>test/token-delegation.test.mjs</code></a>, which runs the real SPL Token program in process and asserts that a spend of 61 against a remaining allowance of 60 fails on-chain, with 460 sitting in the vault.</p>
+<h2 id="rehearse-for-free-on-devnet"><a class="anchor" href="#rehearse-for-free-on-devnet" aria-label="Link to this section">#</a>Rehearse for free on devnet</h2>
+<pre><code class="language-bash">OAW_NETWORK=devnet npx -y @three-ws/onchain-agent-wallets
+</code></pre>
+<p>State is kept per network, so a devnet rehearsal never touches your mainnet agents.</p>
+<h2 id="use-it-as-a-library"><a class="anchor" href="#use-it-as-a-library" aria-label="Link to this section">#</a>Use it as a library</h2>
+<p>The custody model is plain <code>@solana/web3.js</code> and <code>@solana/spl-token</code>, usable without MCP:</p>
+<pre><code class="language-js">import { createVaultInstructions, readVault, spendableUnits } from &#39;@three-ws/onchain-agent-wallets/lib/vault&#39;;
+
+const { vault, instructions } = await createVaultInstructions({
+	connection,
+	owner: ownerPubkey,
+	agentId: &#39;researcher&#39;,
+	mint: usdcMint,
+	delegate: agentPubkey,
+	allowance: 100_000_000n, // 100 USDC
+	decimals: 6,
+});
+// sign `instructions` with the owner, then:
+const state = await readVault({ connection, vault });
+console.log(spendableUnits(state)); // what the agent may spend right now
+</code></pre>
+<p><code>@three-ws/onchain-agent-wallets/lib/policy</code> exports the guardrail engine on its own, if you want the same rules in a different runtime.</p>
+<h2 id="tests"><a class="anchor" href="#tests" aria-label="Link to this section">#</a>Tests</h2>
+<pre><code class="language-bash">npm test
+</code></pre>
+<p>Runs the guardrail unit tests, the x402 selection tests, and the delegation integration test against the real SPL Token program.</p>
+<h2 id="related"><a class="anchor" href="#related" aria-label="Link to this section">#</a>Related</h2>
+<ul>
+<li><a href="https://github.com/nirholas/metaplex-agent-mcp"><code>@three-ws/metaplex-agent-mcp</code></a> mints agent identities into the Metaplex Agent Registry. <code>deploy_agent_onchain</code> uses it as a library, and its <code>prepare_agent_mint</code> is the browser-wallet path for minting.</li>
+<li><a href="https://three.ws">three.ws</a> is where these agents get faces, avatars, and a home.</li>
+</ul>
+<h2 id="license"><a class="anchor" href="#license" aria-label="Link to this section">#</a>License</h2>
+<p>See <a href="https://github.com/nirholas/onchain-agent-wallets/blob/main/LICENSE">LICENSE</a>.</p>
+</main>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ul><li><a href="#the-problem-this-solves">The problem this solves</a></li><li><a href="#how-it-works">How it works</a></li><li><a href="#install">Install</a></li><li><a href="#setup">Setup</a></li><li><a href="#quickstart">Quickstart</a></li><li><a href="#tools">Tools</a></li><li><a href="#guardrails">Guardrails</a></li><li><a href="#x402">x402</a></li><li><a href="#what-the-agent-cannot-do">What the agent cannot do</a></li><li><a href="#rehearse-for-free-on-devnet">Rehearse for free on devnet</a></li><li><a href="#use-it-as-a-library">Use it as a library</a></li><li><a href="#tests">Tests</a></li><li><a href="#related">Related</a></li><li><a href="#license">License</a></li></ul></nav>
+</div>
+<footer><div class="foot-in"><span>Apache-2.0 licensed</span><a href="https://github.com/nirholas/onchain-agent-wallets/issues">Issues</a><a href="https://github.com/nirholas/onchain-agent-wallets/blob/main/CONTRIBUTING.md">Contributing</a><a href="https://github.com/nirholas/onchain-agent-wallets/security/policy">Security</a><a href="https://three.ws">Part of three.ws</a></div></footer>
+<script>document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+var t=b.getAttribute('data-copy');var done=function(){var o=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=o},1400)};
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
+else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()}})});</script>
+</body>
+</html>
