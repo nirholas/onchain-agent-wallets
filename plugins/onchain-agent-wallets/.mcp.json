@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "onchain-agent-wallets": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@three-ws/onchain-agent-wallets"
+      ]
+    }
+  }
+}
